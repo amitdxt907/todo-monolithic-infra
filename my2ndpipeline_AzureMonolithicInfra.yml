@@ -1,0 +1,22 @@
+pool: Defualt
+
+trigger:
+ branches:
+   include:
+     - main
+     - feature/*
+ paths:
+   include:
+     - environment/dev
+
+variables:
+  - group: dhondhu
+  - name: STORAGE_ACCOUNT_NAME
+    value: "tfstatestgname"
+  - name: WORK_DIR
+    value:'$(System.DefaultWorkingDirectory)/environment/dev' 
+
+stages:
+  - stage: PreCommit
+    displayName: Pre-Commit / Static Analysis Stage
+    pool: Default
