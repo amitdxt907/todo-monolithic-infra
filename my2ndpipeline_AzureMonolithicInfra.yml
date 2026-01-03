@@ -10,11 +10,13 @@ trigger:
      - environment/dev
 
 variables:
-  - group: dhondhu
+  - group: dhondu
   - name: STORAGE_ACCOUNT_NAME
-    value: "tfstatestgname"
+    value: 'tfstatestgname'
   - name: WORK_DIR
-    value:'$(System.DefaultWorkingDirectory)/environment/dev' 
+    value: '$(System.DefaultWorkingDirectory)/environments\dev'
+  - name: SERVICE_CONNECTION
+    value: 'azure-sc'
 
 stages:
   - stage: PreCommit
@@ -24,4 +26,35 @@ stages:
       - job: TerraformValidate
         displayName: Terraform Validate
         steps:
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(WORK_DIR)'
+            backendServiceArm: '$(SERVICE_CONNECTION)'
+            backendAzureRmStorageAccountName: '$(STORAGE_ACCOUNT_NAME)'
+            backendAzureRmContainerName: 'tfstates'
+            backendAzureRmKey: 'dev.terraform.tfstate'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+            workingDirectory: '$(WORK_DIR)'
+      - job: TerraformFmt
+        dependsOn: TerraformValidate
+        displayName: Terraform Fmt
+        steps:
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'custom'
+            workingDirectory: '$(WORK_DIR)'
+            outputTo: 'console'
+            customCommand: 'fmt'
+            environmentServiceNameAzureRM: '$(SERVICE_CONNECTION)'
+      - job: tfsec
+        dependsOn: TerraformFmt
+        displayName: Tfsec Scan
+        steps:
         
+
