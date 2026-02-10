@@ -7,6 +7,7 @@ locals {
 }
 
 resource "azurerm_public_ip" "pip" {
+
   for_each = var.public_ips
 
   name                = each.value.name
@@ -48,10 +49,6 @@ resource "azurerm_public_ip" "pip" {
       tags["last_modified"], # example of dynamic tag ignore
     ]
   }
-
-  depends_on = [
-    # future dependency placeholder
-  ]
 }
 
 output "public_ip_addresses" {

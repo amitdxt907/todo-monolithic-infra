@@ -1,19 +1,19 @@
 terraform {
   required_providers {
     azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "4.49.0"
+      source = "hashicorp/azurerm"
+      version = "4.57.0"
     }
   }
-#   backend "azurerm" {
-#     resource_group_name  = ""
-#     storage_account_name = ""
-#     container_name       = ""
-#     key                  = ""
-#   }
+  backend "azurerm" {
+    resource_group_name  = "rg-dhondu"
+    storage_account_name = "dhondutfstate"
+    container_name       = "tfstates"
+    key                  = "dev.terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
   features {}
-  subscription_id = "1075ec7a-b17a-4f37-bf3f-9d68c4506dc1"
+  subscription_id = "115bf1f0-6100-4248-b7d3-3be099f19237"
 }

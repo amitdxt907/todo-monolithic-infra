@@ -1,19 +1,28 @@
-# Yaha pe nic aur VM dono k variables ka input diya gya hai kyuki dono k liye same variable declare kiya hai
+variable "subnet_ids" {
+  type = map(string)
+}
+
+variable "public_ip_ids" {
+  type = map(string)
+}
+
 variable "vms" {
-  type = map(object(
-    {
-      nic_name               = string
-      location               = string
-      rg_name                = string
-      vnet_name              = string
-      subnet_name            = string
-      pip_name               = string
-      kv_name                = string
-      vm_name                = string
-      size                   = string
-      admin_username         = string
-      admin_password         = string
-      source_image_reference = map(string)
-    }
-  ))
+  type = map(object({
+    vm_name     = string
+    rg_name     = string
+    location    = string
+    size        = string
+    nic_name    = string
+    subnet_name = string
+    pip_name    = string
+    admin_username = string
+    admin_password = string
+    tags = map(string)
+    source_image_reference = object({
+      publisher = string
+      offer     = string
+      sku       = string
+      version   = string
+    })
+  }))
 }

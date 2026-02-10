@@ -6,18 +6,21 @@ module "resource_group" {
 
 # VNET
 module "network" {
+  depends_on = [ module.resource_group ]
   source   = "../../modules/azurerm_networking"
   networks = var.networks
 }
 
 # Public IP
 module "public_ip" {
+    depends_on = [module.resource_group]
   source     = "../../modules/azurerm_public_ip"
   public_ips = var.public_ips
 }
 
 # Key Vault
 module "key_vault" {
+  depends_on = [module.resource_group]
   source     = "../../modules/azurerm_key_vault"
   key_vaults = var.key_vaults
 }
@@ -46,7 +49,17 @@ module "sql_db" {
 
 # vms
 module "vms" {
-  depends_on = [module.network, module.public_ip]
+  depends_on = [module.network, module.subnet, module.public_ip]
   source     = "../../modules/azurerm_compute"
-  vms        = var.vms
+
+  vms           = var.vms
+  subnet_ids    = module.subnet.subnet_ids   # ✅ CORRECT
+  public_ip_ids = module.public_ip.public_ip_ids
 }
+
+module "subnet" {
+  depends_on = [module.network]
+  source     = "../../modules/azurerm_subnet"
+  networks   = var.networks
+}
+

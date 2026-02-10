@@ -7,7 +7,7 @@ terraform {
   }
   backend "azurerm" {
     resource_group_name  = "rg-dhondu"
-    storage_account_name = "tfstatestgname"
+    storage_account_name = "dhondutfstate"
     container_name       = "tfstates"
     key                  = "dev.terraform.tfstate"
   }
@@ -15,5 +15,5 @@ terraform {
 
 provider "azurerm" {
   features {}
-  subscription_id = "9310c7e6-e982-4f41-acd7-8de043face09"
+  subscription_id = "115bf1f0-6100-4248-b7d3-3be099f19237"
 }
